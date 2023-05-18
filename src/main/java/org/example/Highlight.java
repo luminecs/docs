@@ -9,7 +9,7 @@ public class Highlight {
 
     public static void main(String[] args) throws Exception {
         String language = "swift";
-        String path = "/home/lumine/下载/basic.md";
+        String path = "/home/lumine/dev/repo/github/luminecs/docs/swift/guide/The Basics  Documentation.md";
         String newPath = path.replace(".md", "-new.md");
         File file = new File(path);
         File newFile = new File(newPath);
