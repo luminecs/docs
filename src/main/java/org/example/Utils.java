@@ -22,15 +22,18 @@ public class Utils {
                 if (i.getAbsolutePath().endsWith(".md")
                         && !i.getAbsolutePath().endsWith("-1.md")
                         && !i.getAbsolutePath().endsWith("-new.md")) {
-                    highlight(language, i);
+                    highlight(language, i, false);
                 }
             }
 
         }
     }
 
-    public static void highlight(String language, File file) throws IOException {
+    public static void highlight(String language, File file, boolean isForceUpdate) throws IOException {
         String newPath = file.getAbsolutePath().replace(".md", "-1.md");
+        if (!isForceUpdate && (new File(newPath).exists())) {
+            return;
+        }
         File newFile = new File(newPath);
         if (newFile.exists()) {
             newFile.delete();
