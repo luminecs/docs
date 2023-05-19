@@ -24,14 +24,28 @@ public class Utils {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             int blockCount = 0;
+            int blockStartBlankLineCount = 0;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("```")) {
                     blockCount++;
                     if ("```".equals(line) && blockCount % 2 == 1) {
                         line += language;
+                        blockStartBlankLineCount++;
+                        Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
+                        continue;
                     }
                 }
-                Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
+                if (blockStartBlankLineCount != 0) { // come in code block
+                    String l = line.trim();
+                    System.out.println("l = " + l);
+                    if (l.length() == 0) { // blank code line
+                    } else { // exist code line
+                        blockStartBlankLineCount = 0;
+                        Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
+                    }
+                } else {
+                    Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,8 +53,7 @@ public class Utils {
 
         String cmd = String.format("pandoc %s -o %s --highlight-style=pygments", newPath,
                 newPath.replace(".md", ".docx"));
-        System.out.println("cmd = " + cmd);
-        Process process = Runtime.getRuntime().exec(cmd);
+        Runtime.getRuntime().exec(cmd);
     }
 
 }
