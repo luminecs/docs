@@ -75,7 +75,7 @@ public class Utils {
                 newPath.replace(".md", ".docx"));
         System.out.println("mdToDocxCmd = " + mdToDocxCmd);
         Runtime.getRuntime().exec(mdToDocxCmd);
-        String mdToHtmlCmd = String.format("pandoc %s -s -o %s --highlight-style=pygments", newPath,
+        String mdToHtmlCmd = String.format("pandoc %s --toc -s -o %s --highlight-style=pygments", newPath,
                 newPath.replace(".md", ".html"));
         System.out.println("mdToHtmlCmd = " + mdToHtmlCmd);
         Runtime.getRuntime().exec(mdToHtmlCmd);
