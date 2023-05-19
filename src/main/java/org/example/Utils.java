@@ -24,23 +24,24 @@ public class Utils {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             int blockCount = 0;
-            int blockStartBlankLineCount = 0;
+            boolean isInCodeBlock = false;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("```")) {
                     blockCount++;
-                    if ("```".equals(line) && blockCount % 2 == 1) {
+                    if ("```".equals(line) && blockCount % 2 == 1) { // come in code block
                         line += language;
-                        blockStartBlankLineCount++;
+                        isInCodeBlock = true;
                         Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
                         continue;
                     }
+                    if ("```".equals(line) && blockCount % 2 == 0) { // quit code block
+                        isInCodeBlock = false;
+                    }
                 }
-                if (blockStartBlankLineCount != 0) { // come in code block
+                if (isInCodeBlock) { // come in code block
                     String l = line.trim();
-                    System.out.println("l = " + l);
-                    if (l.length() == 0) { // blank code line
+                    if (l.length() == 0) { // delete blank code line
                     } else { // exist code line
-                        blockStartBlankLineCount = 0;
                         Files.write(Paths.get(newPath), (line + "\n").getBytes(), StandardOpenOption.APPEND);
                     }
                 } else {
