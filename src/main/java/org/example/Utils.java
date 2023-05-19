@@ -10,11 +10,27 @@ import java.nio.file.StandardOpenOption;
 
 public class Utils {
 
-    public static void highlight() throws IOException {
-        String language = "swift";
-        String path = "/home/lumine/dev/repo/github/luminecs/docs/swift/guide/The-Basics-Documentation.md";
-        String newPath = path.replace(".md", "-new.md");
-        File file = new File(path);
+    public static void batchProcess() throws Exception {
+        String property = System.getProperty("user.dir");
+        File file = new File(property + "/content");
+        for (File f : file.listFiles()) {
+            String language = f.getName();
+            for (File i : com.google.common.io.Files.fileTraverser().depthFirstPreOrder(f)) {
+                if (i.isDirectory()) {
+                    continue;
+                }
+                if (i.getAbsolutePath().endsWith(".md")
+                        && !i.getAbsolutePath().endsWith("-1.md")
+                        && !i.getAbsolutePath().endsWith("-new.md")) {
+                    highlight(language, i);
+                }
+            }
+
+        }
+    }
+
+    public static void highlight(String language, File file) throws IOException {
+        String newPath = file.getAbsolutePath().replace(".md", "-1.md");
         File newFile = new File(newPath);
         if (newFile.exists()) {
             newFile.delete();
