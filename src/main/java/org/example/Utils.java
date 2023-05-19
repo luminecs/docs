@@ -22,7 +22,7 @@ public class Utils {
                 if (i.getAbsolutePath().endsWith(".md")
                         && !i.getAbsolutePath().endsWith("-1.md")
                         && !i.getAbsolutePath().endsWith("-new.md")) {
-                    highlight(language, i, false);
+                    highlight(language, i, true);
                 }
             }
 
@@ -71,9 +71,14 @@ public class Utils {
             e.printStackTrace();
         }
 
-        String cmd = String.format("pandoc %s -o %s --highlight-style=pygments", newPath,
+        String mdToDocxCmd = String.format("pandoc %s -s -o %s --highlight-style=pygments", newPath,
                 newPath.replace(".md", ".docx"));
-        Runtime.getRuntime().exec(cmd);
+        System.out.println("mdToDocxCmd = " + mdToDocxCmd);
+        Runtime.getRuntime().exec(mdToDocxCmd);
+        String mdToHtmlCmd = String.format("pandoc %s -s -o %s --highlight-style=pygments", newPath,
+                newPath.replace(".md", ".html"));
+        System.out.println("mdToHtmlCmd = " + mdToHtmlCmd);
+        Runtime.getRuntime().exec(mdToHtmlCmd);
     }
 
 }
